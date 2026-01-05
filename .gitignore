@@ -1,11 +1,13 @@
-# data artifacts
-data/raw/*.csv
-
 # python
 __pycache__/
 *.pyc
 .venv/
 venv/
+.env
 
-# misc
+# data artifacts
+data/raw/*.csv
+
+# os and ide
 .DS_Store
+.vscode/

@@ -1,32 +1,42 @@
 from __future__ import annotations
 
-import random
-from datetime import datetime, timedelta
-import csv
+import os
 from pathlib import Path
+from datetime import datetime, timedelta
+import numpy as np
+import pandas as pd
+
 
 def main() -> None:
-    out = Path("data/raw/transactions.csv")
-    out.parent.mkdir(parents=True, exist_ok=True)
+    np.random.seed(42)
 
-    categories = ["food", "transport", "home", "health", "fun", "education", "subscriptions"]
-    sources = ["tinkoff", "alfa", "cash"]
+    rows = int(os.getenv("ROWS", "1200"))
+    out_path = Path("data") / "raw" / "transactions.csv"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    start = datetime(2025, 7, 1)
-    rows = []
-    for i in range(1200):
-        dt = start + timedelta(days=random.randint(0, 185))
-        amount = round(random.uniform(50, 5000), 2)
-        cat = random.choice(categories)
-        src = random.choice(sources)
-        rows.append([i + 1, dt.date().isoformat(), amount, cat, src])
+    categories = ["food", "transport", "home", "health", "education", "fun", "subscriptions"]
+    sources = ["bank_a", "bank_b", "cash"]
 
-    with out.open("w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
-        w.writerow(["tx_id", "tx_date", "amount", "category", "source"])
-        w.writerows(rows)
+    start_date = datetime(2025, 10, 1)
+    days_range = 120
 
-    print(f"OK: wrote {len(rows)} rows to {out}")
+    tx_id = np.arange(1, rows + 1, dtype=np.int64)
+    tx_date = [start_date + timedelta(days=int(x)) for x in np.random.randint(0, days_range, size=rows)]
+    amount = np.round(np.random.lognormal(mean=7.5, sigma=0.6, size=rows), 2)
+
+    df = pd.DataFrame(
+        {
+            "tx_id": tx_id,
+            "tx_date": pd.to_datetime(tx_date).dt.date,
+            "amount": amount,
+            "category": np.random.choice(categories, size=rows),
+            "source": np.random.choice(sources, size=rows),
+        }
+    )
+
+    df.to_csv(out_path, index=False, encoding="utf-8")
+    print(f"OK: wrote {len(df)} rows to {out_path.as_posix()}")
+
 
 if __name__ == "__main__":
     main()

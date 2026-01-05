@@ -24,3 +24,5 @@ select
 from ranked
 where rn <= 10
 order by month, spend_amount desc;
+
+select count(*) from mart_spend_by_category_month;
