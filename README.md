@@ -1,13 +1,13 @@
-# Analytics Engineer Pipeline Demo
+п»ї# Analytics Engineer Pipeline Demo
 
-Мини-проект: воспроизводимый пайплайн подготовки данных для отчетности.
+РњРёРЅРё-РїСЂРѕРµРєС‚: РІРѕСЃРїСЂРѕРёР·РІРѕРґРёРјС‹Р№ РїР°Р№РїР»Р°Р№РЅ РїРѕРґРіРѕС‚РѕРІРєРё РґР°РЅРЅС‹С… РґР»СЏ РѕС‚С‡РµС‚РЅРѕСЃС‚Рё.
 
 ## What it does
-- Генерирует пример транзакций в CSV (raw)
-- Загружает raw в PostgreSQL (Python)
-- Строит staging слой (SQL)
-- Строит витрину расходов по категориям по месяцам, top 10 (SQL)
-- Запускает проверки качества данных (SQL)
+- Р“РµРЅРµСЂРёСЂСѓРµС‚ РїСЂРёРјРµСЂ С‚СЂР°РЅР·Р°РєС†РёР№ РІ CSV (raw)
+- Р—Р°РіСЂСѓР¶Р°РµС‚ raw РІ PostgreSQL (Python)
+- РЎС‚СЂРѕРёС‚ staging СЃР»РѕР№ (SQL)
+- РЎС‚СЂРѕРёС‚ РІРёС‚СЂРёРЅСѓ СЂР°СЃС…РѕРґРѕРІ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј РїРѕ РјРµСЃСЏС†Р°Рј, top 10 (SQL)
+- Р—Р°РїСѓСЃРєР°РµС‚ РїСЂРѕРІРµСЂРєРё РєР°С‡РµСЃС‚РІР° РґР°РЅРЅС‹С… (SQL)
 
 ## Tech stack
 - Python (pandas, SQLAlchemy, psycopg2)
@@ -23,38 +23,29 @@
 1) Install Python dependencies
 ```powershell
 pip install -r requirements.txt
+```
 
-
-Start Postgres
-
+2) Start Postgres
+```powershell
 docker compose up -d
+```
+Postgres РґРѕСЃС‚СѓРїРµРЅ РЅР° 127.0.0.1:5433
 
-
-Postgres доступен на 127.0.0.1:5433
-
-Run pipeline end-to-end (includes staging, mart, and checks)
-
+3) Run pipeline end-to-end (includes staging, mart, and checks)
+```powershell
 powershell -ExecutionPolicy Bypass -File .\run.ps1
+```
 
-Project structure
+## Project structure
+- scripts - РіРµРЅРµСЂР°С†РёСЏ РґР°РЅРЅС‹С… Рё Р·Р°РіСЂСѓР·РєР° raw
+- sql/staging - С‡РёСЃС‚РєР° Рё РЅРѕСЂРјР°Р»РёР·Р°С†РёСЏ
+- sql/marts - РІРёС‚СЂРёРЅР°
+- sql/checks - РїСЂРѕРІРµСЂРєРё РєР°С‡РµСЃС‚РІР°
+- run.ps1 - Р·Р°РїСѓСЃРє РѕРґРЅРѕР№ РєРѕРјР°РЅРґРѕР№
 
-scripts - генерация данных и загрузка raw
-
-sql/staging - чистка и нормализация
-
-sql/marts - витрина
-
-sql/checks - проверки качества
-
-run.ps1 - запуск одной командой
-
-Data quality checks
-
+## Data quality checks
 Pass criteria:
-
-diff = 0.00 (суммы в staging и mart совпадают)
-
-bad_amount = 0, bad_category = 0, null_dates = 0
-
+- diff = 0.00 (СЃСѓРјРјС‹ РІ staging Рё mart СЃРѕРІРїР°РґР°СЋС‚)
+- bad_amount = 0, bad_category = 0, null_dates = 0
 
 ---
