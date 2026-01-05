@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ae_demo_postgres
+    environment:
+      POSTGRES_USER: ae_user
+      POSTGRES_PASSWORD: ae_pass
+      POSTGRES_DB: ae_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
