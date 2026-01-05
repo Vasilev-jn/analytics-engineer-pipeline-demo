@@ -1,0 +1,11 @@
+# data artifacts
+data/raw/*.csv
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# misc
+.DS_Store
