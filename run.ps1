@@ -5,16 +5,22 @@ docker compose up -d | Out-Host
 
 Write-Host "Step 2: Wait for Postgres to be ready"
 $maxRetries = 30
+$ready = $false
+
 for ($i = 1; $i -le $maxRetries; $i++) {
-  try {
-    docker exec ae_demo_postgres pg_isready -U ae_user -d ae_db -h 127.0.0.1 -p 5432 | Out-Null
-    Write-Host "Postgres is ready"
+  docker exec ae_demo_postgres pg_isready -U ae_user -d ae_db -h 127.0.0.1 -p 5432 | Out-Null
+  if ($LASTEXITCODE -eq 0) {
+    $ready = $true
     break
-  } catch {
-    if ($i -eq $maxRetries) { throw "Postgres did not become ready in time" }
-    Start-Sleep -Seconds 2
   }
+  Start-Sleep -Seconds 2
 }
+
+if (-not $ready) {
+  throw "Postgres did not become ready in time. Check: docker logs ae_demo_postgres --tail 50"
+}
+
+Write-Host "Postgres is ready"
 
 Write-Host "Step 3: Set env vars for Python connection"
 $env:PG_HOST = "127.0.0.1"
